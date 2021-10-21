@@ -1,0 +1,28 @@
+ul{
+    margin: 0;
+    padding: 0;
+}
+.list__titles{
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #f3f3f3;
+}
+
+li{
+    padding: 5px 10px;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+ul li div {
+    width: 15%;
+    text-align: center;
+}
+
+.second__element{
+    width: 40%;
+}
+
+
