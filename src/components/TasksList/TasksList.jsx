@@ -1,16 +1,21 @@
 import React from 'react'
 import cl from "./style.module.css"
 
+
 const TasksList = ({ tasks, setBtnName, setModalVisible, setSaveTaskIndex, setTasks }) => {
 
     const openCurenTask = (index) => {
+        console.log(index);
         setModalVisible(true);
         setSaveTaskIndex(index);
         setBtnName("Save");
     }
 
     const removeCurrentTask  = (index) => {
-        setTasks(tasks.filter((el, ind) => ind !== index));
+        const question = window.confirm("After press 'Remove' you completely remove your task, are you sure?")
+        if(question){
+            setTasks(tasks.filter((el, ind) => ind !== index));
+        }
     }
 
     return (

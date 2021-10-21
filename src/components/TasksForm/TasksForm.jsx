@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import cl from "./style.module.css"
 
-const TasksForm = ({ setTasks, tasks, setVisible, btnName, index }) => {
+const TasksForm = ({ setTasks, tasks, setVisible, btnName, index, setSaveTaskIndex }) => {
     const [taskName, setTaskName] = useState("");
     const [taskStatus, setTaskStatus] = useState("");
 
@@ -10,19 +10,18 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index }) => {
             setTaskName(tasks[index].name);
             setTaskStatus(tasks[index].status);
         }
-    }, [index, tasks, taskName, taskStatus]);
+    }, [index, tasks]);
 
 
     const handleSetTask = (e) => {
         e.preventDefault();
 
         if (taskName && taskStatus) {
-            console.log(btnName);
             if (btnName === "Save") {
-                tasks.splice(index,1,{
+                tasks.splice(index, 1, {
                     name: taskName,
                     status: taskStatus
-                } )
+                })
                 setTasks(tasks);
             } else {
                 setTasks([{
@@ -33,6 +32,7 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index }) => {
             setTaskName("");
             setVisible(false);
             setTaskStatus("");
+            setSaveTaskIndex(null);
         } else {
             const emptyField = !taskName ? "Name" : "Task";
             alert(`Field ${emptyField} is empty`)
@@ -44,6 +44,7 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index }) => {
         setTaskName("");
         setVisible(false);
         setTaskStatus("");
+        setSaveTaskIndex(null);
     }
 
     return (
@@ -60,7 +61,7 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index }) => {
                     />
                 </div>
                 <div className={cl.form__input}>
-                    <strong>Choose task</strong>
+                    <strong>Choose status</strong>
                     <select
                         required
                         value={taskStatus}

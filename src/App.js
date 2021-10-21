@@ -9,12 +9,14 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [isTasks, setIsTasks] = useState(false);
-  const [saveTaskIndex, setSaveTaskIndex] = useState(null);
+  const [savedTaskIndex, setSaveTaskIndex] = useState(null);
   const [btnName, setBtnName] = useState('Create');
 
   useEffect(() => {
     if (tasks.length) {
       setIsTasks(true);
+    }else{
+      setIsTasks(false);
     }
   }, [tasks])
 
@@ -28,13 +30,14 @@ function App() {
           setTasks={setTasks}
           tasks={tasks}
           setVisible={setModalVisible}
-          setIsTasks={setIsTasks}
           btnName={btnName}
-          index={saveTaskIndex}
+          index={savedTaskIndex}
+          setBtnName={setBtnName}
+          setSaveTaskIndex={setSaveTaskIndex}
         />
       </Modal>
       <div className="content__conteiner">
-        <button className="btn__addTask" onClick={() => setModalVisible(true)}>Add Task</button>
+        <button className="btn__addTask" onClick={() => {setModalVisible(true); setBtnName("Create")}}>Add Task</button>
         {isTasks
           ?
           <TasksList
