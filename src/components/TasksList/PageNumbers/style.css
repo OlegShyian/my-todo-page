@@ -1,0 +1,11 @@
+.page__conteiner{
+    margin-top: auto;
+}
+
+.page{
+    padding: 5px;
+    margin: 2px;
+    border: 2px solid black;
+    cursor: pointer;
+    box-sizing: border-box;
+}

@@ -1,17 +1,16 @@
 import React, { useMemo } from 'react'
 import { useState } from 'react/cjs/react.development'
-import cl from "./style.module.css"
+import PageNumbers from './PageNumbers';
+import "./style.css"
 
 
 const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
     const [mainCheckState, setMainCheckState] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
-    const pagesArray = useMemo(calculatePagesArray, [tasks]);
-
-    function calculatePagesArray() {
+    const pageNumbers = useMemo(() => {
         const totalPages = Math.ceil(tasks.length / 5);
         return new Array(totalPages).fill("").map((el, ind) => ind + 1);
-    }
+    }, [tasks]);
 
     const openCurenTask = (id) => {
         setIndexEditTask(id);
@@ -20,7 +19,9 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
 
     const handleChangeMainCheckState = () => {
         setMainCheckState(!mainCheckState);
-        setTask(tasks.map(task => ({ ...task, checked: !mainCheckState })));
+        console.log(mainCheckState);
+        console.log(tasks);
+        setTask(tasks.map((task, ind) => ({ ...task, checked: !mainCheckState })));
     }
 
     const removeCurrentTask = (id) => {
@@ -51,7 +52,7 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
     return (
         <>
             <ul>
-                <li className={cl.list__titles}>
+                <li className="list__titles">
                     <div>
                         <input
                             type="checkbox"
@@ -59,7 +60,8 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                             onChange={handleChangeMainCheckState}
                         />
                     </div>
-                    <div className={cl.second__element}>Task Name</div>
+                    <div>#</div>
+                    <div className="second__element">Task Name</div>
                     <div>Status</div>
                     <div>Edit</div>
                     <div>Remove</div>
@@ -68,7 +70,7 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                 {tasks.map((task, ind) =>
                     (ind >= (pageNumber - 1) * 5 && ind < pageNumber * 5)
                         ?
-                        <li key={ind} className={cl.list__titles}>
+                        <li key={ind} className="list__titles">
                             <div>
                                 <input
                                     type="checkbox"
@@ -77,7 +79,8 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
 
                                 />
                             </div>
-                            <div className={cl.second__element}>{task.name}</div>
+                            <div>{ind + 1}</div>
+                            <div className="second__element">{task.name}</div>
                             <div>{task.status}</div>
                             <div>
                                 <button
@@ -91,17 +94,10 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                         :
                         null)}
             </ul>
-            <div>
-                {pagesArray.map(pageNumber =>
-                    <span
-                        key={pageNumber}
-                        className={cl.page}
-                        onClick={() => setPageNumber(pageNumber)}
-                    >
-                        {pageNumber}
-                    </span>
-                )}
-            </div>
+            <PageNumbers
+                pageNumbers={pageNumbers}
+                setPageNumber={setPageNumber}
+            />
         </>
     )
 }
