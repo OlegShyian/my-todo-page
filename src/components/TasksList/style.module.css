@@ -8,6 +8,7 @@ ul{
     justify-content: space-around;
     align-items: center;
     background: #f3f3f3;
+    word-wrap: break-word;
 }
 
 li{
@@ -25,4 +26,9 @@ ul li div {
     width: 40%;
 }
 
+.page{
+    border: 1px solid black;
+    cursor: pointer;
+    box-sizing: border-box;
+}
 

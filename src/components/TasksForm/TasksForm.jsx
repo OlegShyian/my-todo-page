@@ -1,38 +1,46 @@
 import React, { useEffect, useState } from 'react'
 import cl from "./style.module.css"
 
-const TasksForm = ({ setTasks, tasks, setVisible, btnName, index, setSaveTaskIndex }) => {
+const TasksForm = ({ setTask, tasks, setIndexEditTask, btnName, taskId }) => {
     const [taskName, setTaskName] = useState("");
     const [taskStatus, setTaskStatus] = useState("");
 
     useEffect(() => {
-        if (index || index === 0) {
-            setTaskName(tasks[index].name);
-            setTaskStatus(tasks[index].status);
+        const isTaskEdit = tasks.find(task => task.id === taskId);;
+        if (isTaskEdit) {
+            setTaskName(isTaskEdit.name);
+            setTaskStatus(isTaskEdit.status);
         }
-    }, [index, tasks]);
+    }, [taskId, tasks]);
 
 
     const handleSetTask = (e) => {
         e.preventDefault();
 
         if (taskName && taskStatus) {
+            console.log(btnName);
             if (btnName === "Save") {
-                tasks.splice(index, 1, {
-                    name: taskName,
-                    status: taskStatus
-                })
-                setTasks(tasks);
+                const editTasks = tasks.map(task => {
+                    if (task.id === taskId) {
+                        return {
+                            name: taskName,
+                            status: taskStatus,
+                            id: task.id,
+                            checked: task.checked
+                        }
+                    }
+                    return task;
+                });
+                setTask(editTasks);
             } else {
-                setTasks([{
+                setTask([{
                     name: taskName,
-                    status: taskStatus
+                    status: taskStatus,
+                    id: Date.now(),
+                    checked: false
                 }, ...tasks])
             }
-            setTaskName("");
-            setVisible(false);
-            setTaskStatus("");
-            setSaveTaskIndex(null);
+            resetValues(e);
         } else {
             const emptyField = !taskName ? "Name" : "Task";
             alert(`Field ${emptyField} is empty`)
@@ -41,10 +49,13 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index, setSaveTaskInd
 
     const handleCancel = (e) => {
         e.preventDefault();
+        resetValues(e);
+    }
+
+    const resetValues = () => {
         setTaskName("");
-        setVisible(false);
         setTaskStatus("");
-        setSaveTaskIndex(null);
+        setIndexEditTask(null);
     }
 
     return (
@@ -75,8 +86,8 @@ const TasksForm = ({ setTasks, tasks, setVisible, btnName, index, setSaveTaskInd
                 </div>
             </div>
             <div className={cl.form__button}>
-                <button onClick={handleSetTask}>{btnName}</button>
                 <button onClick={handleCancel}>Cancel</button>
+                <button onClick={handleSetTask}>{btnName}</button>
             </div>
         </form>
     )

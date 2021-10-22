@@ -1,15 +1,10 @@
 import React from 'react'
-import cl from "./style.module.css"
+import "./style.css"
 
-const Modal = ({ children, visible }) => {
-    
-    const rootClasses = [cl.myModal];
-    if(visible){
-        rootClasses.push(cl.active);
-    }
+const Modal = ({ children }) => {
 
     return (
-        <div className={rootClasses.join(" ")}>
+        <div className="myModal">
             {children}
         </div>
     )
