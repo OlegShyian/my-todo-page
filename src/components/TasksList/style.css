@@ -1,8 +1,9 @@
-ul{
+ul {
     margin: 0;
     padding: 0;
 }
-.list__titles{
+
+.list__titles {
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -11,7 +12,7 @@ ul{
     word-wrap: break-word;
 }
 
-li{
+li {
     padding: 5px 10px;
     list-style: none;
     box-sizing: border-box;
@@ -22,9 +23,18 @@ ul li div {
     text-align: center;
 }
 
-.second__element{
+.second__element {
     width: 40%;
 }
 
+.page__conteiner {
+    margin-top: auto;
+}
 
-
+.page {
+    padding: 5px;
+    margin: 2px;
+    border: 2px solid black;
+    cursor: pointer;
+    box-sizing: border-box;
+}

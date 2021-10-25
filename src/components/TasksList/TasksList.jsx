@@ -1,27 +1,38 @@
-import React, { useMemo } from 'react'
-import { useState } from 'react/cjs/react.development'
-import PageNumbers from './PageNumbers';
+import React, { useMemo, useState } from 'react'
 import "./style.css"
 
 
 const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
     const [mainCheckState, setMainCheckState] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
+    const tasksLimit = 3;
     const pageNumbers = useMemo(() => {
-        const totalPages = Math.ceil(tasks.length / 5);
+        
+        const arr = tasks.filter((task, ind) => (ind >= (pageNumber - 1) * tasksLimit && ind < pageNumber * tasksLimit));;
+        const mainStatus = arr.every(task => task.checked === true);
+        setMainCheckState(mainStatus);
+
+        const totalPages = Math.ceil(tasks.length / tasksLimit);
         return new Array(totalPages).fill("").map((el, ind) => ind + 1);
-    }, [tasks]);
+    }, [tasks, pageNumber]);
+
+
+    // const [currentTasksList , setCurrentTasksList] = useState(() => {
+    //     return tasks.map((task, ind) => (ind >= (pageNumber - 1) * tasksLimit && ind < pageNumber * tasksLimit))
+    // })
+
 
     const openCurenTask = (id) => {
         setIndexEditTask(id);
         setBtnName("Save");
     }
 
-    const handleChangeMainCheckState = () => {
+    const handleChangeMainCheckStatus = () => {
         setMainCheckState(!mainCheckState);
-        console.log(mainCheckState);
-        console.log(tasks);
-        setTask(tasks.map((task, ind) => ({ ...task, checked: !mainCheckState })));
+        setTask(tasks.map((task, ind) =>
+            (ind >= (pageNumber - 1) * tasksLimit && ind < pageNumber * tasksLimit)
+                ? ({ ...task, checked: !mainCheckState })
+                : task));
     }
 
     const removeCurrentTask = (id) => {
@@ -31,7 +42,7 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
             setTask(editedTasks);
             const allCheckStatus = editedTasks.some(task => task.checked === false);
             setMainCheckState(!allCheckStatus);
-            if (editedTasks.length % 5 === 0 && pageNumber !== 1) {
+            if (editedTasks.length % tasksLimit === 0 && pageNumber !== 1) {
                 setPageNumber(pageNumber - 1);
             }
         }
@@ -41,10 +52,17 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
         const editedTasks = tasks.map(task => task.id === id
             ? { ...task, checked: !task.checked }
             : task);
-        const allCheckStatus = editedTasks.some(task => task.checked === false);
-
+        const tasksOnPage = editedTasks.filter((task, ind) => (ind >= (pageNumber - 1) * tasksLimit && ind < pageNumber * tasksLimit));;
+        const mainStatus = tasksOnPage.every(task => task.checked === true);
+        setMainCheckState(mainStatus);
         setTask(editedTasks);
-        setMainCheckState(!allCheckStatus);
+    }
+
+    const handleChangePage = (number) => {
+        setPageNumber(number);
+        const arr = tasks.filter((task, ind) => (ind >= (number - 1) * tasksLimit && ind < number * tasksLimit));;
+        const mainStatus = arr.every(task => task.checked === true);
+        setMainCheckState(mainStatus);
     }
 
 
@@ -57,7 +75,7 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                         <input
                             type="checkbox"
                             checked={mainCheckState}
-                            onChange={handleChangeMainCheckState}
+                            onChange={handleChangeMainCheckStatus}
                         />
                     </div>
                     <div>#</div>
@@ -68,7 +86,7 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                 </li>
                 <hr style={{ margin: "5px 10px", background: "black" }} />
                 {tasks.map((task, ind) =>
-                    (ind >= (pageNumber - 1) * 5 && ind < pageNumber * 5)
+                    (ind >= (pageNumber - 1) * tasksLimit && ind < pageNumber * tasksLimit)
                         ?
                         <li key={ind} className="list__titles">
                             <div>
@@ -94,10 +112,17 @@ const TasksList = ({ tasks, setBtnName, setIndexEditTask, setTask }) => {
                         :
                         null)}
             </ul>
-            <PageNumbers
-                pageNumbers={pageNumbers}
-                setPageNumber={setPageNumber}
-            />
+            <div className="page__conteiner">
+                {pageNumbers.map(pageNumber =>
+                    <span
+                        key={pageNumber}
+                        className="page"
+                        onClick={() => handleChangePage(pageNumber)}
+                    >
+                        {pageNumber}
+                    </span>
+                )}
+            </div>
         </>
     )
 }
